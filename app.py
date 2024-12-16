@@ -1,5 +1,4 @@
 import streamlit as st
-from openai import ChatCompletion
 import json
 
 # Load website content
