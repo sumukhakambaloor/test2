@@ -21,13 +21,9 @@ def chatbot_response(question, memory):
             response = value
             break
     
-    # Fallback to OpenAI GPT (or other LLM)
+    # Fallback response if no match is found
     if not response:
-        completion = ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=memory
-        )
-        response = completion.choices[0].message["content"]
+        response = "I'm sorry, I couldn't find an answer to your question. Please try rephrasing or ask something else!"
     
     # Append bot response to memory
     memory.append({"role": "assistant", "content": response})
@@ -41,5 +37,8 @@ user_input = st.text_input("Your question:")
 
 if user_input:
     response = chatbot_response(user_input, st.session_state.messages)
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    st.text_area("Chat History", value="\n".join([msg["content"] for msg in st.session_state.messages]), height=300)
+    st.text_area(
+        "Chat History",
+        value="\n".join([f"{msg['role'].capitalize()}: {msg['content']}" for msg in st.session_state.messages]),
+        height=300
+    )
